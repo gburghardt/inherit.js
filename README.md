@@ -15,8 +15,7 @@ Prototype/Scriptaculous Compatibility" at the bottom.
 - Inherits class level methods and properties via direct copy
 - Allows for multiple inheritance (more on that later)
 - Augments the Function object's prototype so all JavaScript "classes",
-  regardless of how there were written, can be inheritable from with this
-  library
+  regardless of how there were written, can be inheritable with this library
 
 ## Usage
 
