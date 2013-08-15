@@ -29,11 +29,11 @@ extend Object when creating a new class:
 Let's add an instance method:
 
     var Dog = Object.extend({
-      prototype: {
-        bark: function(text) {
-          alert("The dog says: " + text);
+        prototype: {
+            bark: function(text) {
+                alert("The dog says: " + text);
+            }
         }
-      }
     });
 
     var instance = new Dog();
@@ -43,16 +43,16 @@ Let's add an instance method:
 Now let's add a class level method:
 
     var Dog = Object.extend({
-      self: {
-        bark: function(text) {
-          new Dog().bark(text);
+        self: {
+            bark: function(text) {
+                new Dog().bark(text);
+            }
+        },
+        prototype: {
+            bark: function(text) {
+                alert("The dog says: " + text);
+            }
         }
-      },
-      prototype: {
-        bark: function(text) {
-          alert("The dog says: " + text);
-        }
-      }
     });
 
     Dog.bark("Bow-wow!");
@@ -63,24 +63,24 @@ It seems that dogs share lots of attributes with other animals. Now we need
 inheritance.
 
     var Animal = Object.extend({
-      self: {
-        speak: function(text) {
-          new this().speak(text);
+        self: {
+            speak: function(text) {
+                new this().speak(text);
+            }
+        },
+        prototype: {
+            type: "animal",
+    
+            speak: function(text) {
+                alert("The " + this.type + " says: " + text);
+            }
         }
-      },
-      prototype: {
-        type: "animal",
-
-        speak: function(text) {
-          alert("The " + this.type + " says: " + text);
-        }
-      }
     });
 
     var Dog = Animal.extend({
-      prototype: {
-        type: "dog"
-      }
+        prototype: {
+            type: "dog"
+        }
     });
 
     var dog = new Dog();
@@ -106,16 +106,16 @@ So what methods do we have?
 A function called `initialize` is used as the class constuctor:
 
     var Point = Object.extend({
-      prototype: {
-        x: 0,
-
-        y: 0,
-
-        initialize: function(x, y) {
-          this.x = x;
-          this.y = y;
+        prototype: {
+            x: 0,
+    
+            y: 0,
+    
+            initialize: function(x, y) {
+                this.x = x;
+                this.y = y;
+            }
         }
-      }
     });
 
     var point = new Point(10, 11); // point.x is 10, point.y is 11
@@ -124,16 +124,16 @@ Child classes can override methods on the parent class. You can call the
 overridden method:
 
     var Point3D = Point.extend({
-      prototype: {
-        z: 0,
-
-        initialize: function(x, y, z) {
-          // Call "initialize" on the parent class
-          Point.prototype.initialize.call(this, x, y);
-
-          this.z = z;
+        prototype: {
+            z: 0,
+    
+            initialize: function(x, y, z) {
+                // Call "initialize" on the parent class
+                Point.prototype.initialize.call(this, x, y);
+      
+                this.z = z;
+            }
         }
-      }
     });
 
 ### Overriding methods on the parent class
@@ -142,20 +142,20 @@ Child classes can override any method on the parent class. Calling the method on
 the parent class is a very manual process:
 
     var Parent = Object.extend({
-      prototype: {
-        foo: function() {
-          return "foo";
+        prototype: {
+            foo: function() {
+                return "foo";
+            }
         }
-      }
     });
 
     var Child = Parent.extend({
-      prototype: {
-        foo: function() {
-          var text = Parent.prototype.foo.call(this);
-          return text + " bar";
+        prototype: {
+            foo: function() {
+                var text = Parent.prototype.foo.call(this);
+                return text + " bar";
+            }
         }
-      }
     });
 
     var parent = new Parent();
@@ -191,16 +191,17 @@ optional `included` function, which gets executed when this mixin is included in
 another class.
 
     var MyMixin = {
-      included: function(Klass) {
-        // "Klass" is the class that just included this mixin.
-      },
-      self: {
-        // class level methods go here
-      },
+        included: function(Klass) {
+            // "Klass" is the class that just included this mixin.
+        },
 
-      prototype: {
-        // instance level methods go here
-      }
+        self: {
+            // class level methods go here
+        },
+  
+        prototype: {
+            // instance level methods go here
+        }
     };
 
 The `self` and `prototype` properties are optional.
@@ -210,33 +211,35 @@ inside the function body references the mixin. This function gets passes a
 reference to the class that just included the mixin:
 
     var Point = Object.extend({
-      prototype: {
-        x: 0,
-
-        y: 0,
-
-        initialize: function(x, y) {
-          this.x = x;
-          this.y = y;
+        prototype: {
+            x: 0,
+    
+            y: 0,
+    
+            initialize: function(x, y) {
+                this.x = x;
+                this.y = y;
+            }
         }
-      }
     });
 
     var Mixin = {
-      included: function(Klass) {
-        this === Mixin // true
-        Klass === Point // true
-        Klass.foo === Point.foo // true
-        Klass.prototype.foo === Mixin.prototype.foo // true
-        Klass.prototype.initialize = Point.prototype.initialize // true
-        new Klass() instanceof Point // true
-      },
-      self: {
-        foo: function() {}
-      },
-      prototype: {
-        bar: function() {}
-      }
+        included: function(Klass) {
+            this === Mixin // true
+            Klass === Point // true
+            Klass.foo === Point.foo // true
+            Klass.prototype.foo === Mixin.prototype.foo // true
+            Klass.prototype.initialize = Point.prototype.initialize // true
+            new Klass() instanceof Point // true
+        },
+
+        self: {
+            foo: function() {}
+        },
+        
+        prototype: {
+            bar: function() {}
+        }
     };
 
     Point.include(Mixin); // triggers the Mixin.included function
@@ -246,20 +249,16 @@ reference to the class that just included the mixin:
 Include a single Mixin:
 
     var MyClass = Object.extend({
-
-      includes: MyMixin
-
+        includes: MyMixin
     });
 
 Include multiple Mixins:
 
     var MyClass = Object.extend({
-
-      includes: [
-        Mixin1,
-        Mixin2
-      ]
-
+        includes: [
+            Mixin1,
+            Mixin2
+        ]
     });
 
 #### Include a Mixin outside of a class definition
@@ -273,12 +272,10 @@ You can force a class to include a Mixin after the class has been defined.
 You can declare a Mixin that includes other Mixins:
 
     var CompositeMixin = {
-
-      includes: [
-        Mixin1,
-        Mixin2
-      ]
-
+        includes: [
+            Mixin1,
+            Mixin2
+        ]
     };
 
 ## Class and Mixin definition structure
@@ -292,34 +289,34 @@ The structures of class and mixin definitions are the same, and allow you to:
 An example class definition with everything:
 
     var MyClass = Object.extend({
-      includes: [
-        Mixin1,
-        Mixin2
-      ],
-      self: {
-        // class or "static" methods
-      },
-      prototype: {
-        // instance methods
-      }
+        includes: [
+            Mixin1,
+            Mixin2
+        ],
+        self: {
+            // class or "static" methods
+        },
+        prototype: {
+            // instance methods
+        }
     });
 
 An example Mixin definition with everything:
 
     var Mixin = {
-      included: function(Klass) {
-        // Klass is a class that just included this mixin
-      },
-      includes: [
-        Mixin1,
-        Mixin2
-      ],
-      self: {
-        // class or "static" methods
-      },
-      prototype: {
-        // instance methods
-      }
+        included: function(Klass) {
+            // Klass is a class that just included this mixin
+        },
+        includes: [
+            Mixin1,
+            Mixin2
+        ],
+        self: {
+            // class or "static" methods
+        },
+        prototype: {
+            // instance methods
+        }
     };
 
 ## Using Inherit.js with existing code
@@ -327,25 +324,25 @@ An example Mixin definition with everything:
 You can use this library even if you've created your own classes:
 
     function Point(x, y) {
-      this.x = x;
-      this.y = y;
+        this.x = x;
+        this.y = y;
     }
 
     Point.prototype.isAbove = function(point) {
-      return this.y > point.y;
+        return this.y > point.y;
     };
 
     var Point3D = Point.extend({
-      prototype: {
-        z: 0,
-
-        initialize: function(x, y, z) {
-          // Call the parent class constructor:
-          Point.call(this, x, y);
-
-          this.z = z;
+        prototype: {
+          z: 0,
+  
+          initialize: function(x, y, z) {
+              // Call the parent class constructor:
+              Point.call(this, x, y);
+    
+              this.z = z;
+          }
         }
-      }
     });
 
 ## Notes about Prototype/Scriptaculous Compatibility
