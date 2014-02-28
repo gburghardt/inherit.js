@@ -12,8 +12,8 @@ describe("Function", function() {
 			Klass.include(Mixin);
 			var instance = new Klass();
 
-			expect(Klass.prototype.hasOwnProperty("foo")).toBeTrue();
-			expect(instance.foo).toBeFunction();
+			expect(Klass.prototype.hasOwnProperty("foo")).toBe(true);
+			expect(typeof instance.foo).toBe("function");
 			expect(instance.foo()).toEqual("foo");
 		});
 
@@ -28,7 +28,7 @@ describe("Function", function() {
 			var Klass = function() {};
 			Klass.include(Mixin);
 
-			expect(Klass.hasOwnProperty("bar")).toBeTrue();
+			expect(Klass.hasOwnProperty("bar")).toBe(true);
 			expect(Klass.bar()).toEqual("bar");
 		});
 
@@ -48,11 +48,11 @@ describe("Function", function() {
 			var Klass = function() {};
 			Klass.include(Mixin);
 			var instance = new Klass();
-			
-			expect(Klass.hasOwnProperty("bar")).toBeTrue();
+
+			expect(Klass.hasOwnProperty("bar")).toBe(true);
 			expect(Klass.bar()).toEqual("bar");
-			expect(Klass.prototype.hasOwnProperty("foo")).toBeTrue();
-			expect(instance.foo).toBeFunction();
+			expect(Klass.prototype.hasOwnProperty("foo")).toBe(true);
+			expect(typeof instance.foo).toBe("function");
 			expect(instance.foo()).toEqual("foo");
 		});
 
@@ -89,7 +89,7 @@ describe("Function", function() {
 			};
 			Klass.include(Mixin);
 
-			expect(Klass.bar).toNotEqual(Mixin.self.bar);
+			expect(Klass.bar).not.toEqual(Mixin.self.bar);
 			expect(Klass.bar()).toEqual("bar");
 		});
 	});
@@ -98,22 +98,22 @@ describe("Function", function() {
 		it("does not require parameters", function() {
 			var Klass = Object.extend();
 			var instance = new Klass();
-			expect(Klass).toBeFunction();
-			expect(instance).toBeInstanceof(Klass);
-			expect(instance).toBeInstanceof(Object);
+			expect(typeof Klass).toBe("function");
+			expect(instance instanceof Klass).toBe(true);
+			expect(instance instanceof Object).toBe(true);
 		});
 
 		it("defines initialize() if omitted", function() {
 			var Klass = Object.extend();
 			var instance = new Klass();
-			expect(instance.initialize).toBeFunction();
+			expect(typeof instance.initialize).toBe("function");
 		});
 
 		it("sets the constructor to reference the class", function() {
 			var Klass = Object.extend();
 			var instance = new Klass();
-			expect(Klass.prototype.constructor).toStrictlyEqual(Klass);
-			expect(instance.constructor).toStrictlyEqual(Klass);
+			expect(Klass.prototype.constructor).toBe(Klass);
+			expect(instance.constructor).toBe(Klass);
 		});
 
 		it("defines class level methods", function() {
@@ -124,8 +124,8 @@ describe("Function", function() {
 					}
 				}
 			});
-			expect(Klass.hasOwnProperty("foo")).toBeTrue();
-			expect(Klass.foo).toBeFunction();
+			expect(Klass.hasOwnProperty("foo")).toBe(true);
+			expect(typeof Klass.foo).toBe("function");
 			expect(Klass.foo()).toEqual("foo");
 		});
 
@@ -138,7 +138,7 @@ describe("Function", function() {
 				}
 			});
 			var instance = new Klass();
-			expect(Klass.prototype.hasOwnProperty("foo")).toBeTrue();
+			expect(Klass.prototype.hasOwnProperty("foo")).toBe(true);
 			expect(instance.foo).toEqual(Klass.prototype.foo);
 			expect(instance.foo()).toEqual("foo");
 		});
@@ -157,10 +157,10 @@ describe("Function", function() {
 				}
 			});
 			var instance = new Klass();
-			expect(Klass.foo).toBeFunction();
+			expect(typeof Klass.foo).toBe("function");
 			expect(Klass.foo()).toEqual("foo");
-			expect(Klass.prototype.hasOwnProperty("bar")).toBeTrue();
-			expect(Klass.prototype.bar).toBeFunction();
+			expect(Klass.prototype.hasOwnProperty("bar")).toBe(true);
+			expect(typeof Klass.prototype.bar).toBe("function");
 			expect(instance.bar).toEqual(Klass.prototype.bar);
 			expect(instance.bar()).toEqual("bar");
 		});
@@ -182,8 +182,8 @@ describe("Function", function() {
 				includes: Mixin
 			});
 			var instance = new Klass();
-			expect(Klass.foo).toBeFunction();
-			expect(instance.bar).toBeFunction();
+			expect(typeof Klass.foo).toBe("function");
+			expect(typeof instance.bar).toBe("function");
 		});
 
 		it("includes multiple mixins", function() {
@@ -210,9 +210,9 @@ describe("Function", function() {
 				includes: [Mixin1, Mixin2]
 			});
 			var instance = new Klass();
-			expect(Klass.foo).toBeFunction();
-			expect(instance.bar).toBeFunction();
-			expect(instance.foobar).toBeFunction();
+			expect(typeof Klass.foo).toBe("function");
+			expect(typeof instance.bar).toBe("function");
+			expect(typeof instance.foobar).toBe("function");
 		});
 
 		it("inherits from Object", function() {
@@ -222,22 +222,22 @@ describe("Function", function() {
 			// Internet Explorer does not set the __proto__ property for the "prototype"
 			// object of object constructors.
 			if (Klass.prototype.hasOwnProperty("__proto__")) {
-				expect(Klass.prototype.__proto__).toStrictlyEqual(Object.prototype);
+				expect(Klass.prototype.__proto__).toBe(Object.prototype);
 			}
 
-			expect(instance).toBeInstanceof(Klass);
-			expect(instance).toBeInstanceof(Object);
-			expect(instance.__proto__).toStrictlyEqual(Klass.prototype);
+			expect(instance instanceof Klass).toBe(true);
+			expect(instance instanceof Object).toBe(true);
+			expect(instance.__proto__).toBe(Klass.prototype);
 		});
 
 		it("inherits from the parent class", function() {
 			var ParentKlass = Object.extend();
 			var ChildKlass = ParentKlass.extend();
 			var instance = new ChildKlass();
-			expect(ChildKlass.prototype.__proto__).toStrictlyEqual(ParentKlass.prototype);
-			expect(instance).toBeInstanceof(ChildKlass);
-			expect(instance).toBeInstanceof(ParentKlass);
-			expect(instance).toBeInstanceof(Object);
+			expect(ChildKlass.prototype.__proto__).toBe(ParentKlass.prototype);
+			expect(instance instanceof ChildKlass).toBe(true);
+			expect(instance instanceof ParentKlass).toBe(true);
+			expect(instance instanceof Object).toBe(true);
 		});
 
 		it("inherits instance level methods", function() {
@@ -249,7 +249,7 @@ describe("Function", function() {
 				}
 			});
 			var ChildKlass = ParentKlass.extend();
-			expect(ChildKlass.prototype.hasOwnProperty("foo")).toBeFalse();
+			expect(ChildKlass.prototype.hasOwnProperty("foo")).toBe(false);
 			expect(ChildKlass.prototype.foo).toEqual(ParentKlass.prototype.foo);
 		});
 
@@ -262,7 +262,7 @@ describe("Function", function() {
 				}
 			});
 			var ChildKlass = ParentKlass.extend();
-			expect(ChildKlass.hasOwnProperty("foo")).toBeTrue();
+			expect(ChildKlass.hasOwnProperty("foo")).toBe(true);
 			expect(ChildKlass.foo).toEqual(ParentKlass.foo);
 		});
 
@@ -293,9 +293,9 @@ describe("Function", function() {
 				}
 			});
 			var instance = new Klass();
-			expect(Klass.foo).toNotEqual(Mixin.self.foo);
+			expect(Klass.foo).not.toEqual(Mixin.self.foo);
 			expect(Klass.foo()).toEqual("foo");
-			expect(instance.bar).toNotEqual(Mixin.prototype.bar);
+			expect(instance.bar).not.toEqual(Mixin.prototype.bar);
 			expect(instance.bar()).toEqual("bar");
 		});
 	});
