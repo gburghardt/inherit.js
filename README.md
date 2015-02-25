@@ -14,21 +14,17 @@ Prototype/Scriptaculous Compatibility" at the bottom.
 - Inherits instance level methods and properties via the prototype
 - Inherits class level methods and properties via direct copy
 - Allows for multiple inheritance (more on that later)
-- Augments the Function object's prototype so all JavaScript "classes",
-  regardless of how there were written, can be inheritable with this library
+- Use `Base.enhance` to add support for any JavaScript class
 
 ## Usage
 
 ### Create a basic class
 
-Every class in JavaScript naturally inherits from Object, so naturally, we
-extend Object when creating a new class:
-
-    var Dog = Object.extend();
+    var Dog = Base.extend();
 
 Let's add an instance method:
 
-    var Dog = Object.extend({
+    var Dog = Base.extend({
         prototype: {
             bark: function(text) {
                 alert("The dog says: " + text);
@@ -42,7 +38,7 @@ Let's add an instance method:
 
 Now let's add a class level method:
 
-    var Dog = Object.extend({
+    var Dog = Base.extend({
         self: {
             bark: function(text) {
                 new Dog().bark(text);
@@ -62,7 +58,7 @@ Now let's add a class level method:
 It seems that dogs share lots of attributes with other animals. Now we need
 inheritance.
 
-    var Animal = Object.extend({
+    var Animal = Base.extend({
         self: {
             speak: function(text) {
                 new this().speak(text);
@@ -105,7 +101,7 @@ So what methods do we have?
 
 A function called `initialize` is used as the class constuctor:
 
-    var Point = Object.extend({
+    var Point = Base.extend({
         prototype: {
             x: 0,
     
@@ -141,7 +137,7 @@ overridden method:
 Child classes can override any method on the parent class. Calling the method on
 the parent class is a very manual process:
 
-    var Parent = Object.extend({
+    var Parent = Base.extend({
         prototype: {
             foo: function() {
                 return "foo";
@@ -210,7 +206,7 @@ The `included` function is optional as well. When called, the `this` variable
 inside the function body references the mixin. This function gets passes a
 reference to the class that just included the mixin:
 
-    var Point = Object.extend({
+    var Point = Base.extend({
         prototype: {
             x: 0,
     
@@ -248,13 +244,13 @@ reference to the class that just included the mixin:
 
 Include a single Mixin:
 
-    var MyClass = Object.extend({
+    var MyClass = Base.extend({
         includes: MyMixin
     });
 
 Include multiple Mixins:
 
-    var MyClass = Object.extend({
+    var MyClass = Base.extend({
         includes: [
             Mixin1,
             Mixin2
@@ -288,7 +284,7 @@ The structures of class and mixin definitions are the same, and allow you to:
 
 An example class definition with everything:
 
-    var MyClass = Object.extend({
+    var MyClass = Base.extend({
         includes: [
             Mixin1,
             Mixin2
@@ -321,7 +317,7 @@ An example Mixin definition with everything:
 
 ## Using Inherit.js with existing code
 
-You can use this library even if you've created your own classes:
+You can use this library even if you've created your own classes by calling `Base.enhance` and pass in the class.
 
     function Point(x, y) {
         this.x = x;
@@ -331,6 +327,9 @@ You can use this library even if you've created your own classes:
     Point.prototype.isAbove = function(point) {
         return this.y > point.y;
     };
+
+    // Add the "extend" and "include" methods to the Point class
+    Base.enhance(Point);
 
     var Point3D = Point.extend({
         prototype: {
@@ -348,12 +347,6 @@ You can use this library even if you've created your own classes:
 ## Notes about Prototype/Scriptaculous Compatibility
 
 For those using the Prototype JavaScript library, there are a couple of caveats:
-
-### Compatibility with Object.extend()
-
-The Prototype library defines a function called `Object.extend`. For the sake of
-compatibility, use `Object._extend(...)` when inheriting from Object. For any
-other class, use `ClassName.extend(...)` (no underscore).
 
 ### Compatibility with Class.create()
 
