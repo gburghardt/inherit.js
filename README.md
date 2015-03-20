@@ -245,7 +245,7 @@ var Mixin = {
         Klass === Point // true
         Klass.foo === Point.foo // true
         Klass.prototype.foo === Mixin.prototype.foo // true
-        Klass.prototype.constructor = Point.prototype.constructor // true
+        Klass.prototype.constructor === Point.prototype.constructor // true
         new Klass() instanceof Point // true
     },
 
