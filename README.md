@@ -134,7 +134,7 @@ overridden method:
 ```javascript
 var Point3D = Point.extend(
     function Point3D(x, y, z) {
-        // Call "initialize" on the parent class
+        // Call the constructor on the parent class
         Point.call(this, x, y);
 
         this.z = z;
@@ -226,18 +226,18 @@ inside the function body references the mixin. This function gets passes a
 reference to the class that just included the mixin:
 
 ```javascript
-var Point = Base.extend({
-    prototype: {
-        x: 0,
-
-        y: 0,
-
-        initialize: function(x, y) {
-            this.x = x;
-            this.y = y;
+var Point = Base.extend(
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    },
+    {
+        prototype: {
+            x: 0,
+            y: 0
         }
     }
-});
+);
 
 var Mixin = {
     included: function(Klass) {
@@ -245,7 +245,7 @@ var Mixin = {
         Klass === Point // true
         Klass.foo === Point.foo // true
         Klass.prototype.foo === Mixin.prototype.foo // true
-        Klass.prototype.initialize = Point.prototype.initialize // true
+        Klass.prototype.constructor = Point.prototype.constructor // true
         new Klass() instanceof Point // true
     },
 
@@ -365,18 +365,19 @@ Point.prototype.isAbove = function(point) {
 // Add the "extend" and "include" methods to the Point class
 Base.enhance(Point);
 
-var Point3D = Point.extend({
-    prototype: {
-      z: 0,
+var Point3D = Point.extend(
+    function Point3D(x, y, z) {
+      // Call the parent class constructor:
+      Point.call(this, x, y);
 
-      initialize: function(x, y, z) {
-          // Call the parent class constructor:
-          Point.call(this, x, y);
-
-          this.z = z;
-      }
+      this.z = z;
+    },
+    {
+        prototype: {
+          z: 0
+        }
     }
-});
+);
 ```
 
 ## Notes about Prototype/Scriptaculous Compatibility
