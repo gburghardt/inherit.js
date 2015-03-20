@@ -109,21 +109,21 @@ dog.speak("woof");    // alerts "The dog says: woof";
 
 ### The class constructor
 
-A function called `initialize` is used as the class constuctor:
+When the first argument to `Base.extend` is a `Function`, then this becomes the constructor function:
 
 ```javascript
-var Point = Base.extend({
-    prototype: {
-        x: 0,
-
-        y: 0,
-
-        initialize: function(x, y) {
-            this.x = x;
-            this.y = y;
+var Point = Base.extend(
+    function Point(x, y) {
+        this.x = x;
+        this.y = y;
+    },
+    {
+        prototype: {
+            x: 0,
+            y: 0
         }
     }
-});
+);
 
 var point = new Point(10, 11); // point.x is 10, point.y is 11
 ```
@@ -132,18 +132,19 @@ Child classes can override methods on the parent class. You can call the
 overridden method:
 
 ```javascript
-var Point3D = Point.extend({
-    prototype: {
-        z: 0,
+var Point3D = Point.extend(
+    function Point3D(x, y, z) {
+        // Call "initialize" on the parent class
+        Point.call(this, x, y);
 
-        initialize: function(x, y, z) {
-            // Call "initialize" on the parent class
-            Point.prototype.initialize.call(this, x, y);
-  
-            this.z = z;
+        this.z = z;
+    },
+    {
+        prototype: {
+            z: 0
         }
     }
-});
+);
 ```
 
 ### Overriding methods on the parent class
